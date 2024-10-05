@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.Repository.BookEntity;
+import com.example.demo.Repository.StudentEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -13,36 +13,36 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Service
-public class BookService {
-    public static List<BookEntity> getBookList() {
+public class StudentService {
+    public static List<StudentEntity> getStudentsList() {
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
 
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        Query query = session.createQuery("From BookEntity *");
-        List<BookEntity> bookList = query.getResultList();
+        Query query = session.createQuery("From StudentEntity *");
+        List<StudentEntity> studentList = query.getResultList();
 
         session.close();
         factory.close();
 
-        return bookList;
+        return studentList;
     }
 
-    public BookEntity getById(Integer id) {
+    public StudentEntity getById(Integer id) {
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
 
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        BookEntity book = session.get(BookEntity.class, id);
+        StudentEntity student = session.get(StudentEntity.class, id);
 
         session.close();
         factory.close();
 
-        return book;
+        return student;
     }
 
     public Boolean delete(Integer id) {
@@ -52,8 +52,8 @@ public class BookService {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        Query query = session.createQuery("DELETE FROM Book WHERE id = :bookId");
-        query.setParameter("bookId", id);
+        Query query = session.createQuery("DELETE FROM Student WHERE id = :studentId");
+        query.setParameter("studentId", id);
         int result = query.executeUpdate();
 
         session.close();
@@ -62,17 +62,17 @@ public class BookService {
         return result > 0;
     }
 
-    public Boolean update(Integer id, BookEntity book) {
+    public Boolean update(Integer id, StudentEntity student) {
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
 
         SessionFactory factory = meta.getSessionFactoryBuilder().build();
         Session session = factory.openSession();
 
-        BookEntity oldBook = session.get(BookEntity.class, id);
+        StudentEntity oldStudent = session.get(StudentEntity.class, id);
         boolean updated = false;
-        if (oldBook != null) {
-            session.update(book);
+        if (oldStudent != null) {
+            session.update(student);
             updated = true;
         }
 
