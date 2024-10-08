@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.Exception.LyuboyException;
+import com.example.demo.Repository.BookEntity;
 import com.example.demo.Repository.StudentEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,6 +16,21 @@ import java.util.List;
 
 @Service
 public class StudentService {
+    public Boolean create(StudentEntity student) {
+        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
+        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+
+        SessionFactory factory = meta.getSessionFactoryBuilder().build();
+        Session session = factory.openSession();
+
+        session.save(student);
+
+        session.close();
+        factory.close();
+
+        return true;
+    }
+
     public static List<StudentEntity> getStudentsList() {
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
@@ -81,6 +98,4 @@ public class StudentService {
 
         return updated;
     }
-
-
 }

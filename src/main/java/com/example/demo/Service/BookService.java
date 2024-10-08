@@ -1,6 +1,8 @@
 package com.example.demo.Service;
 
+import com.example.demo.Exception.LyuboyException;
 import com.example.demo.Repository.BookEntity;
+import com.example.demo.Repository.StudentBookEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -14,6 +16,21 @@ import java.util.List;
 
 @Service
 public class BookService {
+    public Boolean create(BookEntity book) {
+        StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
+        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
+
+        SessionFactory factory = meta.getSessionFactoryBuilder().build();
+        Session session = factory.openSession();
+
+        session.save(book);
+
+        session.close();
+        factory.close();
+
+        return true;
+    }
+
     public static List<BookEntity> getBookList() {
         StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.config.xml").build();
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();
@@ -23,6 +40,10 @@ public class BookService {
 
         Query query = session.createQuery("From BookEntity *");
         List<BookEntity> bookList = query.getResultList();
+
+        for (BookEntity b : bookList) {
+            validate(b);
+        }
 
         session.close();
         factory.close();
@@ -39,6 +60,7 @@ public class BookService {
 
         BookEntity book = session.get(BookEntity.class, id);
 
+        validate(book);
         session.close();
         factory.close();
 
@@ -76,6 +98,8 @@ public class BookService {
             updated = true;
         }
 
+        validate(book);
+
         session.close();
         factory.close();
 
@@ -83,4 +107,9 @@ public class BookService {
     }
 
 
+    public static void validate(BookEntity book) {
+        if (book.getId() == null) {
+            throw new LyuboyException("ID of student or book is NULL!");
+        }
+    }
 }

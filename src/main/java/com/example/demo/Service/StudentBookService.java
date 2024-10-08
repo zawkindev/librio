@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.Exception.LyuboyException;
 import com.example.demo.Repository.BookEntity;
 import com.example.demo.Repository.Status;
 import com.example.demo.Repository.StudentBookEntity;
@@ -43,6 +44,8 @@ public class StudentBookService {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
 
+        validate(studentBook);
+
         studentBook.setCreatedDate(LocalDate.now());
         studentBook.setStatus(Status.TAKEN);
 
@@ -63,6 +66,7 @@ public class StudentBookService {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
 
+        validate(studentBook);
         studentBook.setCreatedDate(LocalDate.now());
         studentBook.setStatus(Status.RETURNED);
 
@@ -85,6 +89,8 @@ public class StudentBookService {
 
         StudentBookEntity studentBook = session.get(StudentBookEntity.class, id);
 
+        validate(studentBook);
+
         transaction.commit();
         session.close();
         factory.close();
@@ -103,6 +109,10 @@ public class StudentBookService {
         query.setParameter("id", StudentBookEntity.class);
         List<StudentBookEntity> studentBookList = query.getResultList();
 
+        for (StudentBookEntity sb : studentBookList) {
+            validate(sb);
+        }
+
         session.close();
         factory.close();
 
@@ -120,9 +130,19 @@ public class StudentBookService {
         query.setParameter("id", StudentBookEntity.class);
         List<StudentBookEntity> studentBookList = query.getResultList();
 
+        for (StudentBookEntity sb : studentBookList) {
+            validate(sb);
+        }
+
         session.close();
         factory.close();
 
         return studentBookList;
+    }
+
+    public static void validate(StudentBookEntity studentBook) {
+        if (studentBook.getStudent().getId() == null || studentBook.getBook().getId() == null) {
+            throw new LyuboyException("ID of student or book is NULL!");
+        }
     }
 }

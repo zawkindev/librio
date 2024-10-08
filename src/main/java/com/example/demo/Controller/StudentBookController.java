@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Repository.StudentBookEntity;
 import com.example.demo.Service.StudentBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,33 +16,33 @@ public class StudentBookController {
 
 
     @PostMapping({"/student_book/", "/student_book"})
-    public StudentBookEntity take(@RequestBody StudentBookEntity studentBook) {
-        return studentBookService.take(studentBook);
+    public ResponseEntity<StudentBookEntity> take(@RequestBody StudentBookEntity studentBook) {
+        return ResponseEntity.ok(studentBookService.take(studentBook));
     }
 
 
     @PutMapping({"/student_book/", "/student_book"})
-    public StudentBookEntity returnBook(@RequestBody StudentBookEntity studentBook) {
-        return studentBookService.returnBook(studentBook);
+    public ResponseEntity<StudentBookEntity> returnBook(@RequestBody StudentBookEntity studentBook) {
+        return ResponseEntity.ok(studentBookService.returnBook(studentBook));
     }
 
     @GetMapping({"/student_book/", "/student_book"})
-    public List<StudentBookEntity> getStudentBookList() {
-        return studentBookService.getStudentBookList();
+    public ResponseEntity<List<StudentBookEntity>> getStudentBookList() {
+        return ResponseEntity.ok(studentBookService.getStudentBookList());
     }
 
     @GetMapping("/student_book/{id}")
-    public StudentBookEntity getStudentBookById(@PathVariable("id") String id) {
-        return studentBookService.getStudentBookById(id);
+    public ResponseEntity<StudentBookEntity> getStudentBookById(@PathVariable("id") String id) {
+        return ResponseEntity.ok(studentBookService.getStudentBookById(id));
     }
 
     @GetMapping("/student_book/student/{studentId}")
-    public List<StudentBookEntity> getStudentBookTakenByStudentId(@PathVariable("studentId") String id) {
-        return studentBookService.getStudentBookTakenByStudentId(id);
+    public ResponseEntity<List<StudentBookEntity>> getStudentBookTakenByStudentId(@PathVariable("studentId") String id) {
+        return ResponseEntity.ok(studentBookService.getStudentBookTakenByStudentId(id));
     }
 
     @GetMapping("/student_book/book/{bookId}")
-    public List<StudentBookEntity> getStudentBookTakenByBookId(@PathVariable("bookId") String id) {
-        return studentBookService.getStudentBookTakenByBookId(id);
+    public ResponseEntity<List<StudentBookEntity>> getStudentBookTakenByBookId(@PathVariable("bookId") String id) {
+        return ResponseEntity.ok(studentBookService.getStudentBookTakenByBookId(id));
     }
 }
